@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'services/server_valid_hub.dart';
 
 void main() {
   runApp(const MyApp());
@@ -57,6 +57,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  var _isValid = 0;
+  _MyHomePageState() {
+    start();
+  }
+
+  start() {
+    startListeningHub(_setIsValid);
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -66,6 +74,13 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+    });
+  }
+
+  void _setIsValid(dynamic data) {
+    print(data);
+    setState(() {
+      _isValid = (data[0] as Map)['dbValid'];
     });
   }
 
@@ -113,6 +128,10 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            Text(
+              'data from server $_isValid',
+              style: Theme.of(context).textTheme.headlineLarge,
+            )
           ],
         ),
       ),
